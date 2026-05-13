@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  emqx:
+    image: emqx:latest
+    container_name: emqx-broker
+    ports:
+      - "1883:1883"   # MQTT
+      - "8083:8083"   # MQTT over WebSockets
+      - "8084:8084"   # MQTT over SSL/TLS
+      - "18083:18083" # EMQX Dashboard
+    environment:
+      - EMQX_NAME=emqx-broker
+      - EMQX_HOST=127.0.0.1
+    networks:
+      - iot-network
+       
