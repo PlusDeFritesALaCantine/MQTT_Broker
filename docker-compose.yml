@@ -1,17 +1,47 @@
-version: '3.8'
-
 services:
   emqx:
     image: emqx:latest
     container_name: emqx-broker
     ports:
-      - "1883:1883"   # MQTT
-      - "8083:8083"   # MQTT over WebSockets
-      - "8084:8084"   # MQTT over SSL/TLS
-      - "18083:18083" # EMQX Dashboard
+      - "1883:1883"  
+      - "8083:8083"  
+      - "8084:8084" 
+      - "18083:18083"
     environment:
       - EMQX_NAME=emqx-broker
       - EMQX_HOST=127.0.0.1
     networks:
       - iot-network
-       
+  
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=iot_data
+    ports:
+      - "5432:5432"
+    networks:
+      - iot-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  pgadmin:
+      image: dpage/pgadmin4:latest
+      container_name: pgadmin
+      environment:
+        - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+        - PGADMIN_DEFAULT_PASSWORD=admin
+      ports:
+        - "8080:8080"
+      networks:
+        - iot-network
+      depends_on:
+        - postgres
+
+volumes:
+  postgres_data:
+
+networks:
+  iot-network:
+    driver: bridge

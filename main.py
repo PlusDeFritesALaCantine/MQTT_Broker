@@ -1,5 +1,8 @@
+from mqtt import MQTT
+
+MQTT = MQTT()
 def main():
-    print("Hello from brocker-mqtt!")
+    MQTT
 
 
 if __name__ == "__main__":
