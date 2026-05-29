@@ -1,5 +1,43 @@
-.venv/*
-__pycache__/* 
-.pytest_cache/*
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Environnements virtuels
+.venv/
+venv/
+env/
 .python-version
+
+# Tests & qualité
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Variables d'environnement
 .env
+.env.local
+
+# Données persistées localement par Docker
+mosquitto/data/
+mosquitto/log/
+postgres_data/
+
+# Outils de packaging
+dist/
+build/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
