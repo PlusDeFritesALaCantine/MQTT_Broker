@@ -12,6 +12,8 @@ services:
       - EMQX_HOST=127.0.0.1
     networks:
       - iot-network
+    volumes:
+      - emqx_data:/opt/emqx/data
   
   postgres:
     image: postgres:latest
@@ -26,6 +28,7 @@ services:
       - iot-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
   pgadmin:
       image: dpage/pgadmin4:latest
       container_name: pgadmin
@@ -41,6 +44,7 @@ services:
 
 volumes:
   postgres_data:
+  emqx_data:
 
 networks:
   iot-network:
