@@ -1,7 +1,9 @@
-from sqlalchemy import Integer, String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from database import Base
+from __future__ import annotations
 
+from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from database import Base
 
 
 class IotSensor(Base):
@@ -12,5 +14,5 @@ class IotSensor(Base):
     mqtt_topic: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(String(255), nullable=True)
 
-    warehouse: Mapped["Warehouse"] = relationship("Warehouse", back_populates="sensors")
-    readings: Mapped[list["SensorReading"]] = relationship("SensorReading", back_populates="sensor")
+    warehouse: Mapped[Warehouse] = relationship("Warehouse", back_populates="sensors")
+    readings: Mapped[list[SensorReading]] = relationship("SensorReading", back_populates="sensor")

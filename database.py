@@ -1,6 +1,7 @@
 import os
 from contextlib import contextmanager
 from pathlib import Path
+
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
@@ -28,13 +29,6 @@ class Base(DeclarativeBase):
 
 
 def init_db():
-    from models.lot import Lot
-    from models.alerte import Alerte
-    from models.warehouse import Warehouse
-    from models.exploitation import Exploitation
-    from models.iot_sensor import IotSensor
-    from models.country import Country
-    from models.sensor_reading import SensorReading
     print("Création des tables si elles n'existent pas...")
     Base.metadata.create_all(bind=engine)
 

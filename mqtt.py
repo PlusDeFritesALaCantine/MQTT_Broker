@@ -1,10 +1,11 @@
-import serial
-import paho.mqtt.client as mqtt
-from datetime import datetime
 import json
 import logging
-import time
 import os
+import time
+from datetime import datetime
+
+import paho.mqtt.client as mqtt
+import serial
 from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)

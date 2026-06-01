@@ -1,6 +1,11 @@
+from __future__ import annotations
+
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from database import Base
+
+
 class Country(Base):
     __tablename__ = 'country'
 
@@ -12,4 +17,4 @@ class Country(Base):
     temperature_tolerance: Mapped[int] = mapped_column(Integer, nullable=False)
     humidity_tolerance: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    exploitations: Mapped[list["Exploitation"]] = relationship("Exploitation", back_populates="country")
+    exploitations: Mapped[list[Exploitation]] = relationship("Exploitation", back_populates="country")

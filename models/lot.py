@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from datetime import datetime
-from sqlalchemy import Integer, String, DateTime, ForeignKey
+
+from sqlalchemy import DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from database import Base
 
 
@@ -12,5 +16,5 @@ class Lot(Base):
     warehouse_id: Mapped[int] = mapped_column(Integer, ForeignKey('warehouse.id'), nullable=False)
     stored_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
-    warehouse: Mapped["Warehouse"] = relationship("Warehouse", back_populates="lots")
-    alertes: Mapped[list["Alerte"]] = relationship("Alerte", back_populates="lot")
+    warehouse: Mapped[Warehouse] = relationship("Warehouse", back_populates="lots")
+    alertes: Mapped[list[Alerte]] = relationship("Alerte", back_populates="lot")
