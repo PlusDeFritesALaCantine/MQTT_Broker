@@ -1,8 +1,6 @@
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
-
-
 class Country(Base):
     __tablename__ = 'country'
 

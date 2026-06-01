@@ -4,7 +4,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
 
 
-
 class Lot(Base):
     __tablename__ = 'lot'
 

@@ -2,6 +2,8 @@ from datetime import datetime
 from sqlalchemy import Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
+from models.warehouse import Warehouse
+from models.lot import Lot
 
 
 class Alerte(Base):

@@ -1,19 +1,18 @@
 import os
 from contextlib import contextmanager
+from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
 DB_URL = os.getenv("DB_URL")
 
 if not DB_URL:
     raise ValueError("DB_URL is not set in environment variables")
 
-DATABASE_URL = DB_URL
-
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+engine = create_engine(DB_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 
 try:
