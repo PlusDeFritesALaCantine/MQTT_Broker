@@ -1,6 +1,6 @@
 services:
   emqx:
-    image: emqx:latest
+    image: docker.io/emqx/emqx:latest
     container_name: emqx-broker
     ports:
       - "1883:1883"  
@@ -16,7 +16,7 @@ services:
       - emqx_data:/opt/emqx/data
   
   postgres:
-    image: postgres:latest
+    image: docker.io/library/postgres:latest
     container_name: postgres-db
     environment:
       - POSTGRES_USER=postgres
@@ -27,16 +27,16 @@ services:
     networks:
       - iot-network
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
 
   pgadmin:
-      image: dpage/pgadmin4:latest
+      image: docker.io/dpage/pgadmin4:latest
       container_name: pgadmin
       environment:
         - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
         - PGADMIN_DEFAULT_PASSWORD=admin
       ports:
-        - "8080:8080"
+        - "8080:80"
       networks:
         - iot-network
       depends_on:
