@@ -1,6 +1,6 @@
 services:
   emqx:
-    image: docker.io/emqx/emqx:latest
+    image: emqx:latest
     container_name: emqx-broker
     ports:
       - "1883:1883"  
@@ -8,20 +8,21 @@ services:
       - "8084:8084" 
       - "18083:18083"
     environment:
-      - EMQX_NAME=emqx-broker
-      - EMQX_HOST=127.0.0.1
+      - EMQX_NODE__NAME=emqx@127.0.0.1
     networks:
       - iot-network
     volumes:
       - emqx_data:/opt/emqx/data
+      - emqx_log:/opt/emqx/log
   
   postgres:
-    image: docker.io/library/postgres:latest
+    image: postgres:latest
     container_name: postgres-db
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=iot_data
+      - POSTGRES_LISTEN_ADDRESSES=0.0.0.0
     ports:
       - "5432:5432"
     networks:
@@ -30,11 +31,12 @@ services:
       - postgres_data:/var/lib/postgresql
 
   pgadmin:
-      image: docker.io/dpage/pgadmin4:latest
+      image: dpage/pgadmin4:latest
       container_name: pgadmin
       environment:
         - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
         - PGADMIN_DEFAULT_PASSWORD=admin
+        - PGADMIN_LISTEN_ADDRESS=0.0.0.0
       ports:
         - "8080:80"
       networks:
@@ -45,6 +47,7 @@ services:
 volumes:
   postgres_data:
   emqx_data:
+  emqx_log:
 
 networks:
   iot-network:

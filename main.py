@@ -1,8 +1,26 @@
-from mqtt import MQTT
+import logging
+import sys
 
-MQTT = MQTT()
+from database import init_db
+from mqtt import MQTT
+from seed import seed_database
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
 def main():
-    MQTT
+    logger.info("Initialisation de la base de données...")
+    init_db()
+
+    # Optionnel : ajouter des données de test
+    if len(sys.argv) > 1 and sys.argv[1] == "--seed":
+        logger.info("Ajout des données initiales...")
+        seed_database()
+
+    logger.info("Démarrage du broker MQTT...")
+    mqtt = MQTT()
+    return mqtt
 
 
 if __name__ == "__main__":
