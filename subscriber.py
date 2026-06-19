@@ -1,6 +1,8 @@
 """Subscriber MQTT : écoute les mesures capteur sur EMQX et les persiste en base.
 
-Topic attendu : bresil/<entrepot>/mesures (ex: bresil/entrepot1/mesures)
+Topic attendu : <pays>/<entrepot>/mesures (ex: bresil/entrepot1/mesures,
+equateur/entrepot1/mesures, colombie/entrepot1/mesures). Le wildcard sur les
+deux premiers niveaux permet de recevoir les 3 pays sur le même broker/subscriber.
 Payload attendu : {"temperature": 29.5, "humidity": 54.2, "timestamp": "..."}
 
 Écrit directement dans la table `mesures` (schéma utilisé par api_futurekawa),
@@ -27,7 +29,8 @@ logger = logging.getLogger(__name__)
 DB_URL = os.getenv("DB_URL")
 MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
-MQTT_TOPIC_MESURES = os.getenv("MQTT_TOPIC_MESURES", "bresil/+/mesures")
+MQTT_TOPIC_MESURES = os.getenv("MQTT_TOPIC_MESURES", "+/+/mesures")
+PAYS_VALIDES = {"bresil", "equateur", "colombie"}
 
 if not DB_URL:
     raise ValueError("DB_URL is not set in environment variables")
@@ -40,12 +43,18 @@ INSERT_MESURE = text(
 )
 
 
-def entrepot_id_from_topic(topic: str) -> str:
-    """bresil/entrepot1/mesures -> entrepot-bresil-1"""
-    segment = topic.split("/")[1] if "/" in topic else topic
+def entrepot_id_from_topic(topic: str) -> str | None:
+    """bresil/entrepot1/mesures -> entrepot-bresil-1 ; equateur/entrepot1/mesures -> entrepot-equateur-1"""
+    parts = topic.split("/")
+    if len(parts) < 2:
+        return None
+    pays, segment = parts[0], parts[1]
+    if pays not in PAYS_VALIDES:
+        logger.error("Pays inconnu dans le topic %s (attendu: %s)", topic, ", ".join(PAYS_VALIDES))
+        return None
     match = re.search(r"(\d+)$", segment)
     suffix = match.group(1) if match else "1"
-    return f"entrepot-bresil-{suffix}"
+    return f"entrepot-{pays}-{suffix}"
 
 
 def on_connect(client, userdata, flags, rc, properties=None):
@@ -72,6 +81,8 @@ def on_message(client, userdata, msg):
 
     timestamp = payload.get("timestamp") or datetime.now(timezone.utc).isoformat()
     entrepot_id = entrepot_id_from_topic(msg.topic)
+    if entrepot_id is None:
+        return
 
     try:
         with engine.begin() as conn:
