@@ -44,6 +44,17 @@ services:
       depends_on:
         - postgres
 
+  # Faux serveur SMTP local : capture les emails d'alerte (cahier des charges III.4)
+  # sans jamais en envoyer un vrai. UI web sur http://localhost:8025, SMTP sur 1025.
+  mailpit:
+      image: axllent/mailpit:latest
+      container_name: mailpit
+      ports:
+        - "8025:8025"
+        - "1025:1025"
+      networks:
+        - iot-network
+
 volumes:
   postgres_data:
   emqx_data:
