@@ -45,6 +45,8 @@ services:
         - iot-network
       depends_on:
         - postgres
+      volumes:
+        - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
 
   # Faux serveur SMTP local : capture les emails d'alerte (cahier des charges III.4)
   # sans jamais en envoyer un vrai. UI web sur http://localhost:8025, SMTP sur 1025.
