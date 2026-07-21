@@ -26,6 +26,8 @@ jobs:
         run: uv sync
 
       - name: Tester l'import des modules principaux
+        env:
+          DB_URL: "postgresql+psycopg://fake:fake@localhost:5432/fake"
         run: |
           uv run python -c "import database, models, subscriber, simulate_sensor"
 
