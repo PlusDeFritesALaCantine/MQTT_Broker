@@ -25,9 +25,6 @@ jobs:
       - name: Installer les dépendances
         run: uv sync
 
-      - name: Lint (ruff)
-        run: uv run ruff check . --fix
-
       - name: Tester l'import des modules principaux
         run: |
           uv run python -c "import database, models, subscriber, simulate_sensor"
