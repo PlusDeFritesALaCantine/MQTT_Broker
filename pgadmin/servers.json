@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "iot_data (FutureKawa)",
+      "Group": "Servers",
+      "Host": "postgres-db",
+      "Port": 5432,
+      "MaintenanceDB": "iot_data",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    }
+  }
+}

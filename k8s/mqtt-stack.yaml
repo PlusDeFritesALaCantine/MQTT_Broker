@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emqx-broker
+  namespace: futurekawa-app
+  labels:
+    app: emqx-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emqx-broker
+  template:
+    metadata:
+      labels:
+        app: emqx-broker
+    spec:
+      containers:
+        - name: emqx
+          image: emqx/emqx:latest
+          ports:
+            - containerPort: 1883
+              name: mqtt
+            - containerPort: 18083
+              name: dashboard
+          env:
+            - name: EMQX_DASHBOARD__DEFAULT_PASSWORD
+              value: "Kawa-Emqx-2026"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emqx-service
+  namespace: futurekawa-app
+spec:
+  type: ClusterIP
+  selector:
+    app: emqx-broker
+  ports:
+    - name: mqtt
+      port: 1883
+      targetPort: 1883
+    - name: dashboard
+      port: 18083
+      targetPort: 18083
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: futurekawa-subscriber
+  namespace: futurekawa-app
+  labels:
+    app: futurekawa-subscriber
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: futurekawa-subscriber
+  template:
+    metadata:
+      labels:
+        app: futurekawa-subscriber
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: subscriber
+          image: ghcr.io/plusdefritesalacantine/brocker-mqtt:latest
+          command: ["python", "subscriber.py"]
+          env:
+            - name: MQTT_BROKER
+              value: "emqx-service"
+            - name: MQTT_PORT
+              value: "1883"
+            - name: MQTT_TOPIC_MESURES
+              value: "+/+/mesures"
+            - name: DB_URL
+              value: "postgresql+psycopg://futurekawa:futurekawa@postgres-service:5432/futurekawa"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"

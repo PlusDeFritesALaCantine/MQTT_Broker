@@ -9,11 +9,13 @@ services:
       - "18083:18083"
     environment:
       - EMQX_NODE__NAME=emqx@127.0.0.1
+      - EMQX_DASHBOARD__DEFAULT_USERNAME=admin
+      - EMQX_DASHBOARD__DEFAULT_PASSWORD=Kawa-Emqx-2026
     networks:
       - iot-network
     volumes:
       - emqx_data:/opt/emqx/data
-      - emxq_log:/opt/emqx/log
+      - emqx_log:/opt/emqx/log
   
   postgres:
     image: postgres:latest
@@ -23,12 +25,14 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=iot_data
       - POSTGRES_LISTEN_ADDRESSES=0.0.0.0
+      - POSTGRES_LISTEN_ADDRESSES=0.0.0.0
     ports:
+      - "5433:5432"
       - "5433:5432"
     networks:
       - iot-network
     volumes:
-      - postgres_data:/var/lib/postgresql/18/data
+      - postgres_data:/var/lib/postgresql
 
   pgadmin:
       image: dpage/pgadmin4:latest
@@ -37,16 +41,32 @@ services:
         - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
         - PGADMIN_DEFAULT_PASSWORD=admin
         - PGADMIN_LISTEN_ADDRESS=0.0.0.0
+        - PGADMIN_LISTEN_ADDRESS=0.0.0.0
       ports:
-        - "8080:80"
+        # Port hôte surchargeable (PGADMIN_PORT=8081 ./start_all.sh) en cas de conflit.
+        - "${PGADMIN_PORT:-8080}:80"
       networks:
         - iot-network
       depends_on:
         - postgres
+      volumes:
+        - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+
+  # Faux serveur SMTP local : capture les emails d'alerte (cahier des charges III.4)
+  # sans jamais en envoyer un vrai. UI web sur http://localhost:8025, SMTP sur 1025.
+  mailpit:
+      image: axllent/mailpit:latest
+      container_name: mailpit
+      ports:
+        - "8025:8025"
+        - "1025:1025"
+      networks:
+        - iot-network
 
 volumes:
   postgres_data:
-  emqx_data: 
+  emqx_data:
+  emqx_log:
 
 networks:
   iot-network:
