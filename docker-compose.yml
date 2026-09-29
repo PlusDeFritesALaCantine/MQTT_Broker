@@ -25,7 +25,9 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=iot_data
       - POSTGRES_LISTEN_ADDRESSES=0.0.0.0
+      - POSTGRES_LISTEN_ADDRESSES=0.0.0.0
     ports:
+      - "5433:5432"
       - "5433:5432"
     networks:
       - iot-network
@@ -38,6 +40,7 @@ services:
       environment:
         - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
         - PGADMIN_DEFAULT_PASSWORD=admin
+        - PGADMIN_LISTEN_ADDRESS=0.0.0.0
         - PGADMIN_LISTEN_ADDRESS=0.0.0.0
       ports:
         # Port hôte surchargeable (PGADMIN_PORT=8081 ./start_all.sh) en cas de conflit.

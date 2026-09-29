@@ -1,6 +1,7 @@
 # Brocker MQTT
 
 A complete IoT data management system combining an MQTT broker (EMQX), PostgreSQL database, and Python application for collecting, processing, and storing sensor data.
+A complete IoT data management system combining an MQTT broker (EMQX), PostgreSQL database, and Python application for collecting, processing, and storing sensor data.
 
 ## Objective
 
@@ -53,7 +54,12 @@ This project provides a foundation to:
 ## Quick Start
 
 ### 1. Clone the repository
+### 1. Clone the repository
 
+```bash
+git clone <repository-url>
+cd brocker-mqtt
+```
 ```bash
 git clone <repository-url>
 cd brocker-mqtt
@@ -125,7 +131,14 @@ This will start:
 ```bash
 python main.py
 ```
+```bash
+python main.py
+```
 
+### 6. Verify the setup
+
+- **EMQX Web Console**: Open http://localhost:18083 (default: admin/public)
+- **MQTT Testing**: Subscribe to a topic:
 ### 6. Verify the setup
 
 - **EMQX Web Console**: Open http://localhost:18083 (default: admin/public)
@@ -347,7 +360,13 @@ podman exec -it postgres-db psql -U postgres -d iot_data
 See `pyproject.toml` for full dependency list.
 
 ## Contributing
+## Contributing
 
+1. Create a working branch: `git checkout -b feature/your-feature`
+2. Make your changes and test thoroughly
+3. Update documentation if needed
+4. Commit with clear messages: `git commit -m "Add feature description"`
+5. Push to the branch and open a pull request with a clear description
 1. Create a working branch: `git checkout -b feature/your-feature`
 2. Make your changes and test thoroughly
 3. Update documentation if needed
@@ -356,6 +375,14 @@ See `pyproject.toml` for full dependency list.
 
 ## License
 
+[Specify your project license here - e.g., MIT, Apache-2.0, GPL-3.0, or proprietary]
+
+## Support
+
+For issues, questions, or suggestions:
+- Check the [Troubleshooting](#troubleshooting) section
+- Review EMQX documentation: https://docs.emqx.com/
+- Check SQLAlchemy documentation: https://docs.sqlalchemy.org/
 [Specify your project license here - e.g., MIT, Apache-2.0, GPL-3.0, or proprietary]
 
 ## Support
